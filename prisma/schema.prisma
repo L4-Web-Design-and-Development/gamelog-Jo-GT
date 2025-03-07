@@ -11,12 +11,24 @@ datasource db {
 }
 
 model Game {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String
   price       Float
   rating      Float
   releaseDate DateTime
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id          String @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  games       Game[]
 }
