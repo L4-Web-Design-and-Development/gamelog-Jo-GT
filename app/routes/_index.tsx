@@ -14,7 +14,18 @@ export const meta: MetaFunction = () => {
 export async function loader() {
   const prisma = new PrismaClient();
 
-  const games = await prisma.game.findMany();
+  const games = await prisma.game.findMany({
+    select: {
+      id: true,
+      title: true,
+      releaseDate: true,
+      categoryTitle: {
+        select: {
+          title: true,
+        },
+      },
+    },
+  });
 
   return json({ games });
 }
@@ -29,6 +40,7 @@ export default function Index() {
           key={game.id}
           title={game.title}
           releaseDate={game.releaseDate}
+          genre={game.category?.title || "Unknown"}
         />
       ))}
     </div>
