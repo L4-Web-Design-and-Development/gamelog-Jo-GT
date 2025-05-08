@@ -19,7 +19,7 @@ export async function loader() {
       id: true,
       title: true,
       releaseDate: true,
-      categoryTitle: {
+      category: {
         select: {
           title: true,
         },
@@ -29,6 +29,7 @@ export async function loader() {
 
   return json({ games });
 }
+
 
 export default function Index() {
   const { games } = useLoaderData<typeof loader>();
@@ -40,7 +41,7 @@ export default function Index() {
           key={game.id}
           title={game.title}
           releaseDate={game.releaseDate}
-          genre={game.category?.title || "Unknown"}
+          genre={game.category?.title || "No Category"}
         />
       ))}
     </div>
