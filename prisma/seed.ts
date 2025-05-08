@@ -87,6 +87,8 @@ async function seed() {
       price: 26.95,
       rating: 4.8,
       releaseDate: new Date("2011-11-18"),
+      imageUrl:
+        "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701218/2_kigjoh.png",
     },
     {
       title: "Fortnite",
@@ -94,6 +96,8 @@ async function seed() {
       price: 0.0,
       rating: 4.5,
       releaseDate: new Date("2017-07-25"),
+      imageUrl:
+        "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701118/mixcollage-27-dec-2024-08-32-am-4380_tub5v4.jpg",
     },
     {
       title: "Cyberpunk 2077",
@@ -101,6 +105,9 @@ async function seed() {
       price: 59.99,
       rating: 4.0,
       releaseDate: new Date("2020-12-10"),
+      imageUrl:
+        "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701021/cyberpunk-2077-johnny-judy_wkmpod.png",
+
     },
     {
       title: "Among Us",
