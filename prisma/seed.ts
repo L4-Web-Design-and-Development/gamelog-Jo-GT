@@ -59,6 +59,8 @@ async function seed() {
       price: 59.99,
       rating: 4.9,
       releaseDate: new Date("2017-03-03"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701148/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58_rooxmf.jpg"
     },
     {
       title: "The Witcher 3: Wild Hunt",
@@ -66,6 +68,8 @@ async function seed() {
       price: 39.99,
       rating: 4.8,
       releaseDate: new Date("2015-05-19"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701074/xe9pwmbklc551_qn5gxk.jpg"
     },
     {
       title: "Red Dead Redemption 2",
@@ -73,6 +77,8 @@ async function seed() {
       price: 59.99,
       rating: 4.7,
       releaseDate: new Date("2018-10-26"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746700970/hq720_j1y35d.jpg"
     },
     {
       title: "God of War",
@@ -80,6 +86,8 @@ async function seed() {
       price: 49.99,
       rating: 4.9,
       releaseDate: new Date("2018-04-20"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701180/g-o-d-o-f-w-a-r_mbco8i.png"
     },
     {
       title: "Minecraft",
@@ -115,6 +123,8 @@ async function seed() {
       price: 4.99,
       rating: 4.4,
       releaseDate: new Date("2018-06-15"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701038/AU3D-KeyArt-NoLogo-2560x1440-1_gpkffz.webp"
     },
     {
       title: "Animal Crossing: New Horizons",
@@ -122,6 +132,8 @@ async function seed() {
       price: 59.99,
       rating: 4.9,
       releaseDate: new Date("2020-03-20"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701249/9989957eae3a6b545194c42fec2071675c34aadacd65e6b33fdfe7b3b6a86c3a_uga9a9.jpg"
     },
     {
       title: "Hades",
@@ -129,6 +141,8 @@ async function seed() {
       price: 24.99,
       rating: 4.9,
       releaseDate: new Date("2020-09-17"),
+      imageUrl:
+      "https://res.cloudinary.com/dms4l5bab/image/upload/v1746701278/dbc8c55a21688b446a5c57711b726956483a14ef8c5ddb861f897c0595ccb6b5_zlhlj1.jpg"
     },
   ];
 
