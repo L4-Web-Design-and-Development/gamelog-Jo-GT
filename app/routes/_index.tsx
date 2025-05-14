@@ -5,6 +5,7 @@ import type { MetaFunction } from '@remix-run/node';
 import GameCard from '~/components/GameCard'; // Adjust the path as needed
 import gamelogFallback from "~/assets/svg/gamelog-logo.svg"; // You will need to add your own image here
 
+
 export const meta: MetaFunction = () => {
   return [
     { title: 'New Remix App' },
