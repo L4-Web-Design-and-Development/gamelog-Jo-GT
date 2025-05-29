@@ -26,6 +26,9 @@ model Game {
   userId     String?
   user       User?    @relation(fields: [userId], references: [id])
   blogPosts   BlogPost[]
+  startDate   DateTime?
+  hoursPlayed  Float?
+  completedDate DateTime?
 }
 
 model Category {
@@ -47,6 +50,8 @@ model User {
   profilePic String?
   games     Game[]
   blogPosts  BlogPost[]
+  isVerified Boolean @default(false)
+  verificationToken String?
 }
 
 model BlogPost {

@@ -16,7 +16,7 @@ export const loader = async () => {
 export default function About() {
   const { games } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  // fallback for old games: if no imageUrl, use gamelogFallback
+  // Use the actual imageUrl for each game, fallback to gamelogFallback only if missing or empty
   return (
     <div className="container mx-auto px-8 py-8">
       <h1 className="text-3xl font-bold mb-6">About - Game List</h1>
@@ -34,7 +34,8 @@ export default function About() {
               title={game.title}
               releaseDate={game.releaseDate || ""}
               genre={game.category?.title || ""}
-              imageUrl={game.imageUrl && game.imageUrl !== '' ? game.imageUrl : gamelogFallback}
+              imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
+              hideActions={true}
             />
           </button>
         ))}

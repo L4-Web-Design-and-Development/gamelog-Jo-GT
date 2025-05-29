@@ -17,10 +17,17 @@ export const storage = createCookieSessionStorage({
   },
 });
 
-export async function registerUser(email: string, password: string, username: string, profilePic?: string) {
+export async function registerUser(email: string, password: string, username: string, profilePic?: string, verificationToken?: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   return prisma.user.create({
-    data: { email, password: hashedPassword, username, profilePic },
+    data: {
+      email,
+      password: hashedPassword,
+      username,
+      profilePic,
+      isVerified: false,
+      verificationToken
+    },
   });
 }
 

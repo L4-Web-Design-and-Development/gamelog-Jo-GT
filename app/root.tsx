@@ -19,15 +19,17 @@ export const links: LinksFunction = () => [
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
   let userProfilePic = null;
+  let username = null;
   if (userId) {
     const user = await getUserById(userId);
     userProfilePic = user?.profilePic || null;
+    username = user?.username || null;
   }
-  return { userId, userProfilePic };
+  return { userId, userProfilePic, username };
 };
 
 export default function App() {
-  const { userId, userProfilePic } = useLoaderData<{ userId: string | null, userProfilePic: string | null }>();
+  const { userId, userProfilePic, username } = useLoaderData<{ userId: string | null, userProfilePic: string | null, username: string | null }>();
   return (
     <html lang="en">
       <head>
@@ -39,7 +41,7 @@ export default function App() {
       <body>
         <div className="flex flex-col min-h-screen bg-gray-950 text-gray-50">
           <div className="flex-1">
-            <NavBar userId={userId} userProfilePic={userProfilePic} />
+            <NavBar userId={userId} userProfilePic={userProfilePic} username={username} />
             <Outlet />
           </div>
           <Footer />

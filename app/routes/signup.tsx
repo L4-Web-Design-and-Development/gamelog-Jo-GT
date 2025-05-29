@@ -1,6 +1,8 @@
 import { json } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { registerUser, createUserSession } from "../utils/auth.server";
+import { sendVerificationEmail } from "../utils/email.server";
+import { randomBytes } from "crypto";
 import { useState } from "react";
 import ImageUploader from "../components/ImageUploader";
 import siteLogo from "../assets/svg/gamelog-logo.svg";
@@ -8,12 +10,16 @@ import siteLogo from "../assets/svg/gamelog-logo.svg";
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
   const username = formData.get("username") as string;
-  const profilePic = formData.get("profilePic") as string;
+  const password = formData.get("password") as string;
+  const profilePic = formData.get("profilePic") as string | undefined;
+  const finalProfilePic = profilePic && profilePic !== '' ? profilePic : "/assets/svg/gamelog-logo.svg";
+  // Generate verification token
+  const verificationToken = randomBytes(32).toString("hex");
   try {
-    const user = await registerUser(email, password, username, profilePic);
-    return createUserSession(user.id, "/");
+    const user = await registerUser(email, password, username, finalProfilePic, verificationToken);
+    await sendVerificationEmail(email, verificationToken);
+    return json({ success: true, message: "Check your email to verify your account." });
   } catch (e) {
     return json({ error: "User already exists or invalid data" }, { status: 400 });
   }
