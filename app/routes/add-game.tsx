@@ -58,10 +58,6 @@ export default function AddGame() {
   const [imageUrl, setImageUrl] = useState(game?.imageUrl || "");
   const isEdit = Boolean(game);
 
-  const handleImageUploaded = (url: string) => {
-    setImageUrl(url);
-  };
-
   return (
     <div className="container mx-auto py-20 px-4">
       <h1 className="font-bold text-5xl text-center mb-10">
@@ -107,12 +103,12 @@ export default function AddGame() {
           </div>
 
           <div className="mb-8">
-            <ImageUploader onImageUploaded={handleImageUploaded} />
+            <ImageUploader onImageUploaded={setImageUrl} />
             {imageUrl && (
               <img
                 src={imageUrl}
-                alt="Game"
-                className="mt-2 max-h-32 rounded"
+                alt="Game cover preview"
+                className="mt-2 h-32 rounded"
               />
             )}
           </div>

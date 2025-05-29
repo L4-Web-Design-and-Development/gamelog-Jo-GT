@@ -47,6 +47,7 @@ export default function Games() {
             releaseDate={game.releaseDate || ""}
             genre={game.category?.title || ""}
             imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
+            hideActions={false}
           />
         ))}
       </div>

@@ -1,8 +1,9 @@
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form } from "@remix-run/react";
+import { useLoaderData, Form, Link } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
 import { getUserId } from "../utils/auth.server";
 import ImageUploader from "../components/ImageUploader";
+import { useState } from "react";
 
 export const loader = async ({ request }: { request: Request }) => {
   const prisma = new PrismaClient();
@@ -45,12 +46,13 @@ export const action = async ({ request }: { request: Request }) => {
 
 export default function AddGame() {
   const { categories } = useLoaderData<typeof loader>();
+  const [imageUrl, setImageUrl] = useState("");
   return (
     <div className="container mx-auto py-20 px-4">
       <h1 className="font-bold text-5xl text-center mb-10">Add <span className="text-cyan-400">Game</span></h1>
       <div className="max-w-2xl mx-auto bg-gray-950 p-8 rounded-xl">
         <Form method="post" className="space-y-6">
-          <input type="hidden" name="imageUrl" />
+          <input type="hidden" name="imageUrl" value={imageUrl} />
           <div>
             <label htmlFor="title" className="block text-sm font-medium mb-2 text-slate-400">Title</label>
             <input type="text" id="title" name="title" required className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500" />
@@ -60,7 +62,8 @@ export default function AddGame() {
             <textarea id="description" name="description" required rows={4} className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"></textarea>
           </div>
           <div className="mb-8">
-            <ImageUploader onImageUploaded={() => {}} />
+            <ImageUploader onImageUploaded={setImageUrl} />
+            {imageUrl && <img src={imageUrl} alt="Game cover preview" className="mt-2 h-32 rounded" />}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
