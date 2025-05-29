@@ -13,6 +13,8 @@ export const loader = async () => {
       description: true,
       imageUrl: true,
       releaseDate: true,
+      price: true,
+      rating: true,
       category: { select: { title: true } },
     },
     orderBy: { title: "asc" },
@@ -28,7 +30,7 @@ export default function About() {
     <div className="container mx-auto px-8 py-8">
       <h1 className="text-3xl font-bold mb-6">About - Game List</h1>
       <div className="grid grid-cols-3 gap-8">
-        {games.map((game: { id: string; title: string; description: string; imageUrl?: string; releaseDate?: string; category?: { title: string } }) => (
+        {games.map((game: { id: string; title: string; description: string; imageUrl?: string; releaseDate?: string; price: number; rating: number; category?: { title: string } }) => (
           <button
             key={game.id}
             onClick={() => navigate(`/about/${game.id}`)}
@@ -42,7 +44,8 @@ export default function About() {
               releaseDate={game.releaseDate || ""}
               genre={game.category?.title || ""}
               imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
-              hideActions={true}
+              price={game.price}
+              rating={game.rating}
             />
           </button>
         ))}

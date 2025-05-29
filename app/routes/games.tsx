@@ -14,6 +14,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   const games = await prisma.game.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      rating: true,
+      releaseDate: true,
+      imageUrl: true,
+      category: { select: { title: true } },
+    },
   });
   return json({ games, username: user?.username, userProfilePic: user?.profilePic, notLoggedIn: false });
 };
@@ -47,7 +57,8 @@ export default function Games() {
             releaseDate={game.releaseDate || ""}
             genre={game.category?.title || ""}
             imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
-            hideActions={false}
+            price={game.price}
+            rating={game.rating}
           />
         ))}
       </div>

@@ -27,6 +27,8 @@ export async function loader({ request }: { request: Request }) {
       title: true,
       releaseDate: true,
       imageUrl: true,
+      price: true,
+      rating: true,
       category: { select: { title: true } },
     },
   });
@@ -46,6 +48,8 @@ export async function loader({ request }: { request: Request }) {
         title: true,
         releaseDate: true,
         imageUrl: true,
+        price: true,
+        rating: true,
         category: { select: { title: true } },
       },
     });
@@ -60,6 +64,7 @@ export async function loader({ request }: { request: Request }) {
       title: true,
       releaseDate: true,
       imageUrl: true,
+      price: true,
       rating: true,
       category: { select: { title: true } },
     },
@@ -95,7 +100,8 @@ export default function Index() {
               releaseDate={game.releaseDate}
               imageUrl={game.imageUrl || gamelogFallback}
               genre={game.category?.title || "No Category"}
-              hideActions={true}
+              price={game.price}
+              rating={game.rating}
             />
           ))}
         </div>
@@ -118,7 +124,8 @@ export default function Index() {
                 releaseDate={game.releaseDate}
                 imageUrl={game.imageUrl || gamelogFallback}
                 genre={game.category?.title || "No Category"}
-                hideActions={true}
+                price={game.price}
+                rating={game.rating}
               />
             ))
           )}
@@ -139,7 +146,8 @@ export default function Index() {
               releaseDate={game.releaseDate}
               imageUrl={game.imageUrl || gamelogFallback}
               genre={game.category?.title || "No Category"}
-              hideActions={true}
+              price={game.price}
+              rating={game.rating}
             />
           ))}
         </div>

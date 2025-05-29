@@ -4,7 +4,8 @@ interface GameCardProps {
     releaseDate: string;
     genre: string;
     imageUrl: string;
-    hideActions?: boolean;
+    price: number;
+    rating: number;
   }
   
   import { useFetcher, useNavigate } from "@remix-run/react";
@@ -15,7 +16,8 @@ interface GameCardProps {
     releaseDate,
     genre,
     imageUrl,
-    hideActions = false,
+    price,
+    rating,
   }: GameCardProps) {
     const formattedDate = releaseDate.substring(0, 10);
     const fetcher = useFetcher();
@@ -56,6 +58,10 @@ interface GameCardProps {
             <p className="text-cyan-300 uppercase text-sm font-semibold">
               {genre}
             </p>
+            <div className="flex gap-4 text-slate-200/80 text-sm font-semibold mt-1">
+              <span>💲{price.toFixed(2)}</span>
+              <span>⭐ {rating.toFixed(1)}</span>
+            </div>
             <p className="text-slate-200/60 text-sm font-semibold">
               {formattedDate}
             </p>

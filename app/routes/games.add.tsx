@@ -34,8 +34,8 @@ export const action = async ({ request }: { request: Request }) => {
       rating,
       releaseDate,
       imageUrl,
-      categoryId: categoryId || null, // Ensure null if not provided
-      userId: userId || null, // Ensure null if not provided
+      categoryId: categoryId === "" ? null : categoryId, // Fix: set to null if empty string
+      userId, // userId is always valid here
       startDate,
       hoursPlayed,
       completedDate,
