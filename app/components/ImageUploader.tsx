@@ -9,9 +9,10 @@ interface UploadResponse {
 
 interface ImageUploaderProps {
   onImageUploaded: (imageUrl: string) => void;
+  inputId?: string;
 }
 
-export default function ImageUploader({ onImageUploaded }: ImageUploaderProps) {
+export default function ImageUploader({ onImageUploaded, inputId }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +82,7 @@ export default function ImageUploader({ onImageUploaded }: ImageUploaderProps) {
           accept="image/*"
           onChange={handleFileChange}
           ref={fileInputRef}
+          id={inputId}
           className="hidden"
         />
 

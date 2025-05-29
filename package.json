@@ -13,10 +13,11 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@prisma/client": "^6.0.1",
+    "@prisma/client": "^6.8.2",
     "@remix-run/node": "^2.15.1",
     "@remix-run/react": "^2.15.1",
     "@remix-run/serve": "^2.15.1",
+    "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "isbot": "^4.1.0",
     "react": "^18.2.0",

@@ -5,20 +5,28 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { PrismaClient } from "@prisma/client";
 import ImageUploader from "~/components/ImageUploader";
 
-export async function loader() {
+export async function loader({ request }: { request: Request }) {
   const prisma = new PrismaClient();
   const categories = await prisma.category.findMany({
     select: { id: true, title: true },
     orderBy: { title: "asc" },
   });
 
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+  let game = null;
+  if (id) {
+    game = await prisma.game.findUnique({ where: { id } });
+  }
+
   prisma.$disconnect();
 
-  return json({ categories });
+  return json({ categories, game });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
+  const id = formData.get("id") as string | null;
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
@@ -29,17 +37,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const prisma = new PrismaClient();
 
-  await prisma.game.create({
-    data: {
-      title,
-      description,
-      price,
-      rating,
-      releaseDate,
-      imageUrl,
-      categoryId,
-    },
-  });
+  if (id) {
+    await prisma.game.update({
+      where: { id },
+      data: { title, description, price, rating, releaseDate, imageUrl, categoryId },
+    });
+  } else {
+    await prisma.game.create({
+      data: { title, description, price, rating, releaseDate, imageUrl, categoryId },
+    });
+  }
 
   prisma.$disconnect();
 
@@ -47,8 +54,9 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function AddGame() {
-  const { categories } = useLoaderData<typeof loader>();
-  const [imageUrl, setImageUrl] = useState("");
+  const { categories, game } = useLoaderData<typeof loader>();
+  const [imageUrl, setImageUrl] = useState(game?.imageUrl || "");
+  const isEdit = Boolean(game);
 
   const handleImageUploaded = (url: string) => {
     setImageUrl(url);
@@ -57,11 +65,11 @@ export default function AddGame() {
   return (
     <div className="container mx-auto py-20 px-4">
       <h1 className="font-bold text-5xl text-center mb-10">
-        Add <span className="text-cyan-400">Game</span>
+        {isEdit ? "Edit" : "Add"} <span className="text-cyan-400">Game</span>
       </h1>
-
       <div className="max-w-2xl mx-auto bg-gray-950 p-8 rounded-xl">
         <Form method="post" className="space-y-6">
+          {isEdit && game && <input type="hidden" name="id" value={game.id} />}
           <input type="hidden" name="imageUrl" value={imageUrl} />
 
           <div>
@@ -77,6 +85,7 @@ export default function AddGame() {
               name="title"
               required
               className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              defaultValue={game?.title || ""}
             />
           </div>
 
@@ -93,14 +102,20 @@ export default function AddGame() {
               required
               rows={4}
               className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              defaultValue={game?.description || ""}
             ></textarea>
           </div>
 
           <div className="mb-8">
             <ImageUploader onImageUploaded={handleImageUploaded} />
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Game"
+                className="mt-2 max-h-32 rounded"
+              />
+            )}
           </div>
-
-          {/* Additional form fields for price, rating, etc. */}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -118,6 +133,7 @@ export default function AddGame() {
                 min="0"
                 required
                 className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                defaultValue={game?.price ?? ""}
               />
             </div>
 
@@ -137,6 +153,7 @@ export default function AddGame() {
                 max="5"
                 required
                 className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                defaultValue={game?.rating ?? ""}
               />
             </div>
           </div>
@@ -154,6 +171,7 @@ export default function AddGame() {
               name="releaseDate"
               required
               className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              defaultValue={game?.releaseDate ? game.releaseDate.substring(0, 10) : ""}
             />
           </div>
 
@@ -169,6 +187,7 @@ export default function AddGame() {
               name="categoryId"
               required
               className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              defaultValue={game?.categoryId || ""}
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
@@ -190,7 +209,7 @@ export default function AddGame() {
               type="submit"
               className=" bg-cyan-600 text-white py-3 px-6 rounded-md hover:bg-cyan-500 transition duration-200"
             >
-              Add Game
+              {isEdit ? "Update Game" : "Add Game"}
             </button>
           </div>
         </Form>

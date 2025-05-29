@@ -41,6 +41,7 @@ export default function Index() {
       {games.map((game) => (
         <GameCard
           key={game.id}
+          id={game.id}
           title={game.title}
           releaseDate={game.releaseDate}
           imageUrl={game.imageUrl || gamelogFallback}

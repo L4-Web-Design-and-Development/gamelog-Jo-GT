@@ -23,6 +23,9 @@ model Game {
   updatedAt   DateTime @updatedAt
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  blogPosts   BlogPost[]
 }
 
 model Category {
@@ -32,4 +35,27 @@ model Category {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   games       Game[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profilePic String?
+  games     Game[]
+  blogPosts  BlogPost[]
+}
+
+model BlogPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
 }
