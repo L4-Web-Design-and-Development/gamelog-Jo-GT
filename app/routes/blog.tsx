@@ -20,7 +20,12 @@ export default function Blog() {
     <div className="container mx-auto px-8 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Blog</h1>
-        <Link to="/blog/new" className="btn btn-primary">Add Blog Post</Link>
+        <Link to="/blog/new" className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Add Blog Post
+        </Link>
       </div>
       <div className="space-y-8">
         {posts.length === 0 && <p>No blog posts yet.</p>}

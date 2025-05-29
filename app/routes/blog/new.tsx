@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form } from "@remix-run/react";
-import { getUserId } from "../utils/auth.server";
+import { useLoaderData, Form, Link } from "@remix-run/react";
+import { getUserId } from "../../utils/auth.server";
 import { PrismaClient } from "@prisma/client";
 
 export const loader = async () => {
@@ -11,19 +11,19 @@ export const loader = async () => {
 
 export const action = async ({ request }: { request: Request }) => {
   const prisma = new PrismaClient();
+  const userId = await getUserId(request);
+  if (!userId) return redirect("/login");
   const formData = await request.formData();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const gameId = formData.get("gameId") as string;
-  const userId = await getUserId(request);
-  if (!userId) return redirect("/login");
   await prisma.blogPost.create({
     data: { title, content, gameId, userId },
   });
   return redirect("/blog");
 };
 
-export default function NewBlogPost() {
+export default function BlogNew() {
   const { games } = useLoaderData<typeof loader>();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950">
@@ -38,7 +38,10 @@ export default function NewBlogPost() {
               <option key={game.id} value={game.id}>{game.title}</option>
             ))}
           </select>
-          <button type="submit" className="btn btn-primary w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded transition">Post</button>
+          <div className="flex justify-between w-full mt-4">
+            <Link to="/blog" className="text-red-400 border-2 border-red-400 py-2 px-4 rounded-md hover:bg-red-50/10 transition duration-200">Cancel</Link>
+            <button type="submit" className="bg-cyan-600 text-white py-2 px-6 rounded-md hover:bg-cyan-500 transition duration-200 font-bold">Post</button>
+          </div>
         </Form>
       </div>
     </div>

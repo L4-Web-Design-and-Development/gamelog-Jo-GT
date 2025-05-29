@@ -45,22 +45,32 @@ export default function Games() {
           <img src={data.userProfilePic || "/assets/svg/gamelog-logo.svg"} alt="Profile" className="w-10 h-10 rounded-full object-cover border-2 border-cyan-400" />
           <h1 className="text-3xl font-bold">{data.username}&apos;s Games</h1>
         </div>
-        <Link to="/games/add" className="btn btn-primary">Add New Game</Link>
       </div>
+      {/* Add Game Button for grid */}
       <div className="grid grid-cols-3 gap-8">
-        {data.games.length === 0 && <p>You haven&apos;t added any games yet.</p>}
-        {data.games.map((game) => (
-          <GameCard
-            key={game.id}
-            id={game.id}
-            title={game.title}
-            releaseDate={game.releaseDate || ""}
-            genre={game.category?.title || ""}
-            imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
-            price={game.price}
-            rating={game.rating}
-          />
-        ))}
+        <div className="col-span-3 flex justify-center mb-8">
+          <Link to="/add-game" className="flex flex-col items-center justify-center bg-gray-900 rounded-xl shadow-xl p-6 w-full max-w-xs border-2 border-cyan-600 hover:bg-gray-800 transition cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-cyan-400 mb-2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span className="text-cyan-400 text-base font-bold">Add Game</span>
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-8">
+          {data.games.length === 0 && <p className="col-span-3 text-center text-slate-400">You haven&apos;t added any games yet.</p>}
+          {data.games.map((game) => (
+            <GameCard
+              key={game.id}
+              id={game.id}
+              title={game.title}
+              releaseDate={game.releaseDate || ""}
+              genre={game.category?.title || ""}
+              imageUrl={game.imageUrl && game.imageUrl.trim() !== '' ? game.imageUrl : gamelogFallback}
+              price={game.price}
+              rating={game.rating}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
