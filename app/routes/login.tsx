@@ -16,8 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (!user) {
     return json({ error: "Invalid credentials" }, { status: 400 });
   }
-  // If a new profilePic is uploaded, update the user
-  if (profilePic && (!user.profilePic || profilePic !== user.profilePic)) {
+  if (profilePic && profilePic !== user.profilePic) {
     await prisma.user.update({ where: { id: user.id }, data: { profilePic } });
   }
   return createUserSession(user.id, "/");
@@ -28,9 +27,9 @@ export default function Login() {
   const handleImageUploaded = (url: string) => setProfilePic(url);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950">
-      <div className="bg-gray-900 rounded-xl shadow-lg p-10 flex flex-col items-center w-full max-w-md">
+      <div className="bg-gray-900 rounded-xl shadow-lg p-10 w-full max-w-md flex flex-col items-center">
         <img src={siteLogo} alt="GameLog Logo" className="h-20 w-20 mb-6" />
-        <h1 className="text-2xl font-bold mb-4 text-cyan-400">Log in</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Log in</h1>
         <form method="post" className="flex flex-col gap-4 w-full">
           <input name="email" type="email" placeholder="Email" required className="input input-bordered" />
           <input name="password" type="password" placeholder="Password" required className="input input-bordered" />
@@ -40,7 +39,7 @@ export default function Login() {
             {profilePic && <img src={profilePic} alt="Profile preview" className="mt-2 h-16 w-16 rounded-full mx-auto" />}
             <input type="hidden" name="profilePic" value={profilePic} />
           </div>
-          <button type="submit" className="btn btn-primary mt-4">Log in</button>
+          <button type="submit" className="btn btn-primary w-full">Log in</button>
         </form>
       </div>
     </div>

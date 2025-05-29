@@ -10,7 +10,7 @@ import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import stylesheet from "~/tailwind.css?url";
 import NavBar from "./components/NavBar";
 import {Footer} from "./components/Footer"
-import { getUserId } from "./utils/auth.server";
+import { getUserId, getUserById } from "./utils/auth.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -18,11 +18,16 @@ export const links: LinksFunction = () => [
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
-  return { userId };
+  let userProfilePic = null;
+  if (userId) {
+    const user = await getUserById(userId);
+    userProfilePic = user?.profilePic || null;
+  }
+  return { userId, userProfilePic };
 };
 
 export default function App() {
-  const { userId } = useLoaderData();
+  const { userId, userProfilePic } = useLoaderData<{ userId: string | null, userProfilePic: string | null }>();
   return (
     <html lang="en">
       <head>
@@ -34,7 +39,7 @@ export default function App() {
       <body>
         <div className="flex flex-col min-h-screen bg-gray-950 text-gray-50">
           <div className="flex-1">
-            <NavBar userId={userId} />
+            <NavBar userId={userId} userProfilePic={userProfilePic} />
             <Outlet />
           </div>
           <Footer />
