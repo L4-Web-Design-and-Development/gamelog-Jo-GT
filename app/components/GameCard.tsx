@@ -24,8 +24,8 @@ interface GameCardProps {
     const navigate = useNavigate();
   
     return (
-      <div className="flex flex-col gap-4 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:z-10 relative h-full group">
-        <div className="relative h-72 overflow-hidden rounded-md group">
+      <div className="flex flex-col gap-4 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:z-10 relative h-full group w-full">
+        <div className="relative h-64 sm:h-72 overflow-hidden rounded-md group">
           <img
             src={imageUrl}
             alt={`${title} cover`}
@@ -53,16 +53,16 @@ interface GameCardProps {
           </div>
         </div>
         <div className="flex justify-between flex-1">
-          <div className="flex flex-col justify-between w-2/3">
-            <h3 className="font-bold text-2xl text-slate-300">{title}</h3>
-            <p className="text-cyan-300 uppercase text-sm font-semibold">
+          <div className="flex flex-col justify-between w-full">
+            <h3 className="font-bold text-xl sm:text-2xl text-slate-300 line-clamp-2 break-words">{title}</h3>
+            <p className="text-cyan-300 uppercase text-xs sm:text-sm font-semibold">
               {genre}
             </p>
-            <div className="flex gap-4 text-slate-200/80 text-sm font-semibold mt-1">
+            <div className="flex gap-4 text-slate-200/80 text-xs sm:text-sm font-semibold mt-1">
               <span>💲{price.toFixed(2)}</span>
               <span>⭐ {rating.toFixed(1)}</span>
             </div>
-            <p className="text-slate-200/60 text-sm font-semibold">
+            <p className="text-slate-200/60 text-xs sm:text-sm font-semibold">
               {formattedDate}
             </p>
           </div>
