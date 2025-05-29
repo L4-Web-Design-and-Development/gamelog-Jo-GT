@@ -15,6 +15,7 @@ interface ImageUploaderProps {
 export default function ImageUploader({ onImageUploaded, inputId }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fetcher = useFetcher<UploadResponse>();
 
@@ -22,19 +23,16 @@ export default function ImageUploader({ onImageUploaded, inputId }: ImageUploade
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    setPreview(URL.createObjectURL(file));
+    setSelectedFile(file);
   };
 
   const handleUpload = async () => {
-    if (!preview) return;
+    if (!selectedFile) return;
 
     setIsUploading(true);
     const formData = new FormData();
-    formData.append("image", preview);
+    formData.append("image", selectedFile);
 
     fetcher.submit(formData, {
       method: "post",

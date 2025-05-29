@@ -34,6 +34,7 @@ export async function registerUser(email: string, password: string, username: st
 export async function loginUser(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) return null;
+  if (!user.isVerified) return "unverified";
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) return null;
   return user;

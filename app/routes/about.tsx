@@ -7,7 +7,14 @@ import gamelogFallback from "../assets/svg/gamelog-logo.svg";
 export const loader = async () => {
   const prisma = new PrismaClient();
   const games = await prisma.game.findMany({
-    select: { id: true, title: true, description: true },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      imageUrl: true,
+      releaseDate: true,
+      category: { select: { title: true } },
+    },
     orderBy: { title: "asc" },
   });
   return json({ games });

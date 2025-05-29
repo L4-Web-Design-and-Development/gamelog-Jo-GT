@@ -2,61 +2,52 @@ import { json } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { loginUser, createUserSession } from "../utils/auth.server";
 import siteLogo from "../assets/svg/gamelog-logo.svg";
-import { useState } from "react";
-import ImageUploader from "../components/ImageUploader";
 import { PrismaClient } from "@prisma/client";
+import { useActionData } from "@remix-run/react";
 
 export const action: ActionFunction = async ({ request }) => {
   const prisma = new PrismaClient();
   const formData = await request.formData();
   const email = formData.get("email") as string;
-  const username = formData.get("username") as string;
   const password = formData.get("password") as string;
-  const profilePic = formData.get("profilePic") as string | undefined;
-  // Find user by email or username
+  // Find user by email
   let user = null;
   if (email && email.trim() !== "") {
     user = await prisma.user.findUnique({ where: { email } });
   }
-  if (!user && username && username.trim() !== "") {
-    user = await prisma.user.findUnique({ where: { username } });
-  }
   if (!user) {
     return json({ error: "Invalid credentials" }, { status: 400 });
   }
-  // Validate password
-  const isValid = await loginUser(user.email, password);
-  if (!isValid) {
-    return json({ error: "Invalid credentials" }, { status: 400 });
+  // Validate password and verification
+  const loginResult = await loginUser(user.email, password);
+  if (loginResult === "unverified") {
+    return json({ error: "Please verify your email before logging in." }, { status: 400 });
   }
-  // If a new profilePic is uploaded, update the user
-  if (profilePic && profilePic !== user.profilePic) {
-    await prisma.user.update({ where: { id: user.id }, data: { profilePic } });
+  if (!loginResult) {
+    return json({ error: "Invalid credentials" }, { status: 400 });
   }
   return createUserSession(user.id, "/");
 };
 
 export default function Login() {
-  const [profilePic, setProfilePic] = useState("");
-  const handleImageUploaded = (url: string) => setProfilePic(url);
+  const actionData = useActionData<typeof action>();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950">
       <div className="bg-gray-900 rounded-xl shadow-lg p-10 w-full max-w-md flex flex-col items-center">
         <img src={siteLogo} alt="GameLog Logo" className="h-20 w-20 mb-6" />
         <h1 className="text-2xl font-bold mb-4 text-center text-cyan-400">Log in</h1>
+        {actionData?.error && (
+          <div className="text-red-500 text-center mb-2">{actionData.error}</div>
+        )}
         <form method="post" className="flex flex-col gap-4 w-full">
-          <input name="email" type="email" placeholder="Email" className="input input-bordered bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-cyan-400" />
-          <div className="text-center text-slate-400">or</div>
-          <input name="username" type="text" placeholder="Username" className="input input-bordered bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-cyan-400" />
+          <input name="email" type="email" placeholder="Email" required className="input input-bordered bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-cyan-400" />
           <input name="password" type="password" placeholder="Password" required className="input input-bordered bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-cyan-400" />
-          <div>
-            <label htmlFor="profilePicUpload" className="block text-slate-400 mb-2">Profile Picture (optional)</label>
-            <ImageUploader onImageUploaded={handleImageUploaded} inputId="profilePicUpload" />
-            {profilePic && <img src={profilePic} alt="Profile preview" className="mt-2 h-16 w-16 rounded-full mx-auto" />}
-            <input type="hidden" name="profilePic" value={profilePic} />
-          </div>
           <button type="submit" className="btn btn-primary w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded transition">Log in</button>
         </form>
+        <div className="mt-4 text-center text-slate-400">
+          Don&apos;t have an account?{' '}
+          <a href="/signup" className="text-cyan-400 underline">Sign up</a>
+        </div>
       </div>
     </div>
   );

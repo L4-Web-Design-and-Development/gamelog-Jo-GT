@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { registerUser, createUserSession } from "../utils/auth.server";
 import { sendVerificationEmail } from "../utils/email.server";
@@ -6,6 +6,7 @@ import { randomBytes } from "crypto";
 import { useState } from "react";
 import ImageUploader from "../components/ImageUploader";
 import siteLogo from "../assets/svg/gamelog-logo.svg";
+import { useActionData } from "@remix-run/react";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -14,18 +15,16 @@ export const action: ActionFunction = async ({ request }) => {
   const password = formData.get("password") as string;
   const profilePic = formData.get("profilePic") as string | undefined;
   const finalProfilePic = profilePic && profilePic !== '' ? profilePic : "/assets/svg/gamelog-logo.svg";
-  // Generate verification token
-  const verificationToken = randomBytes(32).toString("hex");
   try {
-    const user = await registerUser(email, password, username, finalProfilePic, verificationToken);
-    await sendVerificationEmail(email, verificationToken);
-    return json({ success: true, message: "Check your email to verify your account." });
+    const user = await registerUser(email, password, username, finalProfilePic);
+    return createUserSession(user.id, "/");
   } catch (e) {
     return json({ error: "User already exists or invalid data" }, { status: 400 });
   }
 };
 
 export default function Signup() {
+  const actionData = useActionData<typeof action>();
   const [profilePic, setProfilePic] = useState("");
   const handleImageUploaded = (url: string) => setProfilePic(url);
 
@@ -34,6 +33,9 @@ export default function Signup() {
       <div className="bg-gray-900 rounded-xl shadow-lg p-10 w-full max-w-md flex flex-col items-center">
         <img src={siteLogo} alt="GameLog Logo" className="h-20 w-20 mb-6" />
         <h1 className="text-2xl font-bold mb-4 text-center">Sign Up</h1>
+        {actionData?.error && (
+          <div className="text-red-500 text-center mb-2">{actionData.error}</div>
+        )}
         <form method="post" className="flex flex-col gap-4 w-full">
           <input name="email" type="email" placeholder="Email" required className="input input-bordered" />
           <input name="username" type="text" placeholder="Username" required className="input input-bordered" />
