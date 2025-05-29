@@ -32,25 +32,23 @@ interface GameCardProps {
           <button
             type="button"
             className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 text-white font-bold text-lg rounded-md"
-            onClick={() => navigate(`/blog?gameId=${id}`)}
+            onClick={() => navigate(`/about/${id}`)}
           >
             View
           </button>
-          {!hideActions && (
-            <div className="absolute bottom-4 right-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
-              <button
-                type="button"
-                className="bg-blue-600 text-white rounded px-2 py-1 text-xs hover:bg-blue-800 transition"
-                onClick={() => navigate(`/add-game?id=${id}`)}
-              >
-                Edit
-              </button>
-              <fetcher.Form method="post" action="/delete-game">
-                <input type="hidden" name="id" value={id} />
-                <button type="submit" className="bg-red-600 text-white rounded px-2 py-1 text-xs hover:bg-red-800 transition">Delete</button>
-              </fetcher.Form>
-            </div>
-          )}
+          <div className="absolute bottom-4 right-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
+            <button
+              type="button"
+              className="bg-blue-600 text-white rounded px-2 py-1 text-xs hover:bg-blue-800 transition"
+              onClick={() => navigate(`/add-game?id=${id}`)}
+            >
+              Edit
+            </button>
+            <fetcher.Form method="post" action="/delete-game">
+              <input type="hidden" name="id" value={id} />
+              <button type="submit" className="bg-red-600 text-white rounded px-2 py-1 text-xs hover:bg-red-800 transition">Delete</button>
+            </fetcher.Form>
+          </div>
         </div>
         <div className="flex justify-between flex-1">
           <div className="flex flex-col justify-between w-2/3">

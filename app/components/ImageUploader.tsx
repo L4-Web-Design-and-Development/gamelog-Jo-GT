@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFetcher } from "@remix-run/react";
 
 // Define the response type from the upload API
@@ -41,16 +41,18 @@ export default function ImageUploader({ onImageUploaded, inputId }: ImageUploade
     });
   };
 
-  // Handle the response from the upload
-  if (fetcher.data?.imageUrl && isUploading) {
-    setIsUploading(false);
-    onImageUploaded(fetcher.data.imageUrl);
-  }
+  useEffect(() => {
+    if (fetcher.data?.imageUrl && isUploading) {
+      setIsUploading(false);
+      onImageUploaded(fetcher.data.imageUrl);
+    }
+  }, [fetcher.data, isUploading, onImageUploaded]);
 
-  // Handle errors
-  if (fetcher.state === "idle" && isUploading && fetcher.data?.error) {
-    setIsUploading(false);
-  }
+  useEffect(() => {
+    if (fetcher.state === "idle" && isUploading && fetcher.data?.error) {
+      setIsUploading(false);
+    }
+  }, [fetcher.state, isUploading, fetcher.data]);
 
   return (
     <div className="flex flex-col gap-1">

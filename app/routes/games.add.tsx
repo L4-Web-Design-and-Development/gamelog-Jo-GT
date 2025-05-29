@@ -34,8 +34,8 @@ export const action = async ({ request }: { request: Request }) => {
       rating,
       releaseDate,
       imageUrl,
-      categoryId,
-      userId,
+      categoryId: categoryId || null, // Ensure null if not provided
+      userId: userId || null, // Ensure null if not provided
       startDate,
       hoursPlayed,
       completedDate,
@@ -47,6 +47,9 @@ export const action = async ({ request }: { request: Request }) => {
 export default function AddGame() {
   const { categories } = useLoaderData<typeof loader>();
   const [imageUrl, setImageUrl] = useState("");
+  // Prevent form submit until image is uploaded (if selected)
+  const [uploading, setUploading] = useState(false);
+
   return (
     <div className="container mx-auto py-20 px-4">
       <h1 className="font-bold text-5xl text-center mb-10">Add <span className="text-cyan-400">Game</span></h1>
@@ -62,7 +65,13 @@ export default function AddGame() {
             <textarea id="description" name="description" required rows={4} className="w-full p-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"></textarea>
           </div>
           <div className="mb-8">
-            <ImageUploader onImageUploaded={setImageUrl} />
+            <ImageUploader
+              onImageUploaded={url => {
+                setImageUrl(url);
+                setUploading(false);
+              }}
+              inputId="game-image-upload"
+            />
             {imageUrl && <img src={imageUrl} alt="Game cover preview" className="mt-2 h-32 rounded" />}
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -102,7 +111,13 @@ export default function AddGame() {
           </div>
           <div className="flex justify-end gap-16">
             <Link to="/games" className="text-red-300 border-2 border-red-300 py-3 px-6 rounded-md hover:bg-red-50/10 transition duration-200">Cancel</Link>
-            <button type="submit" className="bg-cyan-600 text-white py-3 px-6 rounded-md hover:bg-cyan-500 transition duration-200">Add Game</button>
+            <button
+              type="submit"
+              className="bg-cyan-600 text-white py-3 px-6 rounded-md hover:bg-cyan-500 transition duration-200"
+              disabled={uploading || (!imageUrl && uploading !== false)}
+            >
+              Add Game
+            </button>
           </div>
         </Form>
       </div>

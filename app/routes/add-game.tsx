@@ -4,6 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { PrismaClient } from "@prisma/client";
 import ImageUploader from "~/components/ImageUploader";
+import { getUserId } from "../utils/auth.server";
 
 export async function loader({ request }: { request: Request }) {
   const prisma = new PrismaClient();
@@ -36,6 +37,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const categoryId = formData.get("categoryId") as string;
 
   const prisma = new PrismaClient();
+  const userId = await getUserId(request);
 
   if (id) {
     await prisma.game.update({
@@ -44,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } else {
     await prisma.game.create({
-      data: { title, description, price, rating, releaseDate, imageUrl, categoryId },
+      data: { title, description, price, rating, releaseDate, imageUrl, categoryId, userId },
     });
   }
 
