@@ -37,9 +37,9 @@ export default function Signup() {
           <div className="text-red-500 text-center mb-2">{actionData.error}</div>
         )}
         <form method="post" className="flex flex-col gap-4 w-full">
-          <input name="email" type="email" placeholder="Email" required className="input input-bordered" />
-          <input name="username" type="text" placeholder="Username" required className="input input-bordered" />
-          <input name="password" type="password" placeholder="Password" required className="input input-bordered" />
+          <input name="email" type="email" placeholder="Email" required className="input input-bordered text-black" />
+          <input name="username" type="text" placeholder="Username" required className="input input-bordered text-black" />
+          <input name="password" type="password" placeholder="Password" required className="input input-bordered text-black" />
           <div>
             <label htmlFor="profilePicUpload" className="block text-slate-400 mb-2">Profile Picture (optional)</label>
             <ImageUploader onImageUploaded={handleImageUploaded} inputId="profilePicUpload" />

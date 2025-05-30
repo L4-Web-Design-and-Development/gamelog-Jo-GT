@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, Form, Link } from "@remix-run/react";
-import { getUserId } from "../../utils/auth.server";
+import { getUserId } from "../utils/auth.server";
 import { PrismaClient } from "@prisma/client";
 
 export const loader = async () => {
