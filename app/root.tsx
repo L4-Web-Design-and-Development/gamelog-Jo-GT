@@ -5,14 +5,31 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import stylesheet from "~/tailwind.css?url";
+import NavBar from "./components/NavBar";
+import {Footer} from "./components/Footer"
+import { getUserId, getUserById } from "./utils/auth.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+  let userProfilePic = null;
+  let username = null;
+  if (userId) {
+    const user = await getUserById(userId);
+    userProfilePic = user?.profilePic || null;
+    username = user?.username || null;
+  }
+  return { userId, userProfilePic, username };
+};
+
 export default function App() {
+  const { userId, userProfilePic, username } = useLoaderData<{ userId: string | null, userProfilePic: string | null, username: string | null }>();
   return (
     <html lang="en">
       <head>
@@ -24,8 +41,10 @@ export default function App() {
       <body>
         <div className="flex flex-col min-h-screen bg-gray-950 text-gray-50">
           <div className="flex-1">
+            <NavBar userId={userId} userProfilePic={userProfilePic} username={username} />
             <Outlet />
           </div>
+          <Footer />
           <ScrollRestoration />
           <Scripts />
         </div>
