@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface GameCardProps {
     id: string;
     title: string;
@@ -22,6 +24,7 @@ interface GameCardProps {
     const formattedDate = releaseDate.substring(0, 10);
     const fetcher = useFetcher();
     const navigate = useNavigate();
+    const [showConfirm, setShowConfirm] = useState(false);
   
     return (
       <div className="flex flex-col gap-4 transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:z-10 relative h-full group w-full">
@@ -46,10 +49,37 @@ interface GameCardProps {
             >
               Edit
             </button>
-            <fetcher.Form method="post" action="/delete-game">
-              <input type="hidden" name="id" value={id} />
-              <button type="submit" className="bg-red-600 text-white rounded px-2 py-1 text-xs hover:bg-red-800 transition">Delete</button>
-            </fetcher.Form>
+            <button
+              type="button"
+              className="bg-red-600 text-white rounded px-2 py-1 text-xs hover:bg-red-800 transition"
+              onClick={() => setShowConfirm(true)}
+            >
+              Delete
+            </button>
+            {showConfirm && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60">
+                <div className="bg-gray-900 border border-gray-700 rounded-lg p-8 shadow-xl flex flex-col items-center">
+                  <p className="text-lg text-slate-200 mb-6">Are you sure you want to delete <span className="text-cyan-400 font-bold">{title}</span>?</p>
+                  <div className="flex gap-6">
+                    <button
+                      className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 font-semibold transition"
+                      onClick={() => {
+                        fetcher.submit({ id }, { method: 'post', action: '/delete-game' });
+                        setShowConfirm(false);
+                      }}
+                    >
+                      Yes, Delete
+                    </button>
+                    <button
+                      className="bg-gray-700 text-slate-200 px-6 py-2 rounded hover:bg-gray-600 font-semibold transition"
+                      onClick={() => setShowConfirm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex justify-between flex-1">
